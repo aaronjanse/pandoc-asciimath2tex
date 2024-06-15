@@ -14,9 +14,15 @@ function action({ t: type, c: value }, _format, _meta) {
                 value[1].substring(1),
             )
         }
+        let p = parser.parse(value[1]).replaceAll('02938740', '\\sim').replaceAll('~', '\\\\');
+        if (value[1].includes('&') && p.includes('\\\\')) {
+            p = '\\begin{aligned}' + p + '\\end{aligned}'
+        } else if (p.includes('\\\\')) {
+            p = '\\begin{gathered}' + p + '\\end{gathered}'
+        }
         return pandoc.Formula(
             value[0],
-            parser.parse(value[1])
+            p
         )
     }
 }
